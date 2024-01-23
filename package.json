@@ -1,11 +1,12 @@
 {
-  "license": "MIT",
+  "name": "ethers-simple-storage-fcc",
+  "version": "1.0.0",
+  "description": "",
   "dependencies": {
-    "dotenv": "^16.3.1",
+    "dotenv": "^14.2.0",
     "ethers": "^6.10.0",
-    "fs-extra": "^11.2.0",
-    "sol": "^0.3.0",
-    "solc": "^0.8.7-fixed"
+    "prettier": "^2.5.1",
+    "solc": "0.8.7-fixed"
   },
   "scripts": {
     "compile": "solcjs --bin --abi --include-path node_modules/ --base-path . -o . SimpleStorage.sol"
