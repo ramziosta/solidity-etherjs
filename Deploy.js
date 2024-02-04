@@ -1,13 +1,16 @@
 const {ethers} = require('ethers');
-const {fs, readFileSync} = require("fs");
+const fs = require("fs-extra");
+const { readFileSync } = fs;
+
 require('dotenv').config();
 
 async function Deploy() {
-    const provider = new ethers.JsonRpcProvider("HTTP://127.0.0.1:7545");
+    const provider = new ethers.JsonRpcProvider(process.env.RPC_URL);
     const wallet = new ethers.Wallet(process.env.PRIVATE_KEY, provider);
     const rr = readFileSync("./SimpleStorage_sol_SimpleStorage.json", "utf8")
-    const abi = readFileSync("./SimpleStorage_sol_SimpleStorage.abi", "utf8");
+    const abi = JSON.parse(readFileSync("./SimpleStorage_sol_SimpleStorage.abi", "utf8"));
     const bin = readFileSync("./SimpleStorage_sol_SimpleStorage.bin", "utf8");
+
 
 
     const contractFactory = new ethers.ContractFactory(abi, bin, wallet);
@@ -15,12 +18,13 @@ async function Deploy() {
     console.log(contractFactory)
     const contract = await contractFactory.deploy({gasLimit: 6721975, gasPrice: ethers.parseUnits('60', 'gwei')});
     console.log("💰" + contract);
-    await contract.deploymentTransaction.wait(1);
+    await contract.deploymentTransaction().wait(1);
 
     const currentFavoriteNumber = await contract.retrieve();  // doesnt read retrieve() it is found in the ABI?
     console.log("Current favorite number is: ", currentFavoriteNumber.toString());
     const transactionResponse = await contract.store(7); // does not read the store function in SimpleStorage.sol
-    const updatedFavoriteNumber = await contract.retrieve();
+    const updatedFavoriteNumber = await contract.retrieve;
+    console.log("Contract deployed to:", contract.address);
     console.log(updatedFavoriteNumber.toString());
 
 }
